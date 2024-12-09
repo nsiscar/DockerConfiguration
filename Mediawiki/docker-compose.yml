@@ -1,0 +1,38 @@
+services:
+  mysqlmw:
+    container_name: mediawiki_database
+    image: mysql
+    ports:
+      - 3310:3306
+    restart: always
+    volumes:
+      - C:/mediawikiDocker/mw_db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: $SQL_ROOT_PWD
+      MYSQL_USER: $SQL_USER
+      MYSQL_PASSWORD: $SQL_PASSWD
+      MYSQL_DATABASE: $SQL_DBNAME
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+    networks:
+      net: 
+        ipv4_address: 172.27.1.2
+
+  web:
+    container_name: mediawiki_www
+    image: mediawiki:$VERSION
+    ports:
+      - 89:80
+    restart: always
+    volumes:
+      - C:/mediawikiDocker/mw_imgdata/:/var/www/html/images
+    networks:
+      net: 
+        ipv4_address: 172.27.1.3
+
+networks:
+  net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.27.1.0/24
